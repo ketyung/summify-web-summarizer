@@ -9,13 +9,21 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       if (tabs[0]?.id) {
         chrome.tabs.sendMessage(
           tabs[0].id,
-          { type: "GET_PAGE_CONTENT" },
+          { action: "fetchPageContent" }, // Action to trigger content extraction
           (response) => {
+            if (chrome.runtime.lastError) {
+              console.error("chrome.runtime.lastError.message:", chrome.runtime.lastError.message);
+              sendResponse({ error: chrome.runtime.lastError.message });
+              return;
+            }
+
             if (response?.content) {
               // Use the page content for summarization (e.g., call your API)
               summarizeText(response.content).then((summary) => {
                 sendResponse({ summary });
               });
+            } else {
+              sendResponse({ error: "No content extracted from the page." });
             }
           }
         );
@@ -30,8 +38,8 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 // Example function to send the content to your API for summarization
 const summarizeText = async (text: string): Promise<string> => {
   try {
-
-
+    // You can call your API for summarization here
+    // Example:
     /*
     const response = await fetch("https://api.your-ai.com/summarize", {
       method: "POST",
@@ -43,8 +51,7 @@ const summarizeText = async (text: string): Promise<string> => {
     const data = await response.json();
     return data.summary;
     */
-
-    return text 
+    return text; // Placeholder for summarization API call
   } catch (error) {
     console.error("Failed to summarize text:", error);
     return "Error generating summary.";

@@ -1,27 +1,36 @@
-import { useState, useEffect, useCallback } from "react";
-import { BeatLoader } from "react-spinners";
+import { useState, useEffect, useCallback } from 'react';
+import ReactDOM from 'react-dom/client';  // Import createRoot from 'react-dom/client'
+import { BeatLoader } from 'react-spinners';
 
 const Popup = () => {
-  const [pageContent, setPageContent] = useState("");
+  const [pageContent, setPageContent] = useState<string>();
+
+  const [isError, setIsError] = useState(false);
 
   // Callback function to fetch content
   const fetchContent = useCallback(() => {
+
+    setIsError(false);
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0]?.id) {
         chrome.tabs.sendMessage(
           tabs[0].id,
-          { action: "fetchPageContent" },
+          { action: 'SUMMARIZE_PAGE' },
           (response) => {
             if (chrome.runtime.lastError) {
-              console.error("chrome.runtime.lastError.message:", chrome.runtime.lastError.message);
+              console.error('popup.chrome.runtime.lastError.message:', chrome.runtime.lastError.message);
+              setPageContent(chrome.runtime.lastError.message ?? "Error fetching content");
+              setIsError(true);
               return;
             }
 
-            // Handle the response from content script
+       
             if (response?.content) {
               setPageContent(response.content);
             } else {
-              console.error("No response or content received.");
+              console.error('No response or content received.');
+              setPageContent('No response or content received.');
+              setIsError(true);
             }
           }
         );
@@ -29,21 +38,24 @@ const Popup = () => {
     });
   }, []); // Empty dependency array ensures `fetchContent` is stable.
 
-  // Automatically fetch content when the popup loads
   useEffect(() => {
     fetchContent();
   }, [fetchContent]);
 
   return (
-    <div className="p-4 max-w-xl bg-white rounded-lg shadow-md" style={{minWidth:"460px"}}>
+    <div className={`p-4 max-w-xl bg-white rounded-lg shadow-md w-full${isError ? ' text-red-400' : ' text-gray-800'}`} style={{ minWidth: '460px' }}>
       <h2 className="font-bold text-lg mb-2">Page Content:</h2>
       {pageContent ? (
-        <p className="whitespace-pre-wrap">{pageContent}</p>
+        <p className={"whitespace-pre-wrap"}>{pageContent}</p>
       ) : (
-        <p><BeatLoader size={8} color="#aaa"/></p>
+        <p>
+          <BeatLoader size={8} color="#aaa" />
+        </p>
       )}
     </div>
   );
 };
 
-export default Popup;
+// Use createRoot to render the component in React 18 and later
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+root.render(<Popup />);
