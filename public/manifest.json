@@ -1,12 +1,23 @@
 {
     "manifest_version": 3,
-    "name": "Web Summarizer Chrome Extension",
+    "name": "Summify",
     "version": "1.0",
     "description": "A Chrome extension that allows you summarize any website that you're browsing, saving you lots of time to read the entire website.",
     "permissions": ["activeTab", "scripting"],
+    "icons": {
+        "16": "icons/icon-16.png",
+        "48": "icons/icon-48.png",
+        "128": "icons/icon-128.png"
+    },
+
     "action": {
       "default_popup": "popup.html",
-      "default_icon": "icon.png"
+      "default_icon": {
+        "16": "icons/icon-16.png",
+        "48": "icons/icon-48.png",
+        "128": "icons/icon-128.png"
+      },
+      "default_title": "Summify"
     },
     "background": {
       "service_worker": "assets/background.js"
