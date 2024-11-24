@@ -13,7 +13,7 @@ const Popup = () => {
           { action: "fetchPageContent" },
           (response) => {
             if (chrome.runtime.lastError) {
-              console.error(chrome.runtime.lastError.message);
+              console.error("chrome.runtime.lastError.message:", chrome.runtime.lastError.message);
               return;
             }
 
@@ -35,7 +35,7 @@ const Popup = () => {
   }, [fetchContent]);
 
   return (
-    <div className="p-4 max-w-sm bg-white rounded-lg shadow-md">
+    <div className="p-4 max-w-xl bg-white rounded-lg shadow-md" style={{minWidth:"460px"}}>
       <h2 className="font-bold text-lg mb-2">Page Content:</h2>
       {pageContent ? (
         <p className="whitespace-pre-wrap">{pageContent}</p>
