@@ -1,5 +1,8 @@
 import { Readability } from "@mozilla/readability";
 
+
+console.log("Content script running!");
+
 chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
   if (request.action === "fetchPageContent") {
     try {

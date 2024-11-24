@@ -18,7 +18,7 @@ const Popup = () => {
           { action: 'SUMMARIZE_PAGE' },
           (response) => {
             if (chrome.runtime.lastError) {
-              console.error('popup.chrome.runtime.lastError.message:', chrome.runtime.lastError.message);
+              console.log('popup.chrome.runtime.lastError.message:', chrome.runtime.lastError.message);
               setPageContent(chrome.runtime.lastError.message ?? "Error fetching content");
               setIsError(true);
               return;

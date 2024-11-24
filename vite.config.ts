@@ -15,6 +15,10 @@ export default defineConfig({
             return content.toString().replace('src="./popup.tsx"', 'src="./popup.js"');
           },
         },
+        {
+          src: "src/index.css", // Source CSS file
+          dest: ".", // Copy it to the root of the output folder
+        },
       ],
     }),
   ],
