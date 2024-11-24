@@ -1,0 +1,20 @@
+{
+    "manifest_version": 3,
+    "name": "Web Summarizer Chrome Extension",
+    "version": "1.0",
+    "description": "A Chrome extension that allows you summarize any website that you're browsing, saving you lots of time to read the entire website.",
+    "permissions": ["activeTab", "scripting"],
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": "icon.png"
+    },
+    "background": {
+      "service_worker": "assets/background.js"
+    },
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["assets/content.js"]
+      }
+    ]
+  }
