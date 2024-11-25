@@ -15,52 +15,37 @@ const Popup = () => {
   const [tabIndex, setTabIndex] = useState(0);
 
   const [processing, setProcessing] = useState(false);
-
   // Callback function to fetch content
   const fetchContent = useCallback(() => {
-
     setIsError(false);
-
     setProcessing(true);
 
-    console.log("going to send sumPage action...");
+    chrome.runtime.sendMessage(
+      { type: "sumPage" }, // Sending 'sumPage' action to the background script
+      (response) => {
+        if (chrome.runtime.lastError) {
+          setPageContent(chrome.runtime.lastError.message ?? "Error fetching content");
+          setSummary("Error of summarizing content");
+          setIsError(true);
+          setProcessing(false);
+          return;
+        }
 
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0]?.id) {
-        chrome.tabs.sendMessage(
-          tabs[0].id,
-          { action: "fetchPageContent" },
-          (response) => {
-            if (chrome.runtime.lastError) {
-              console.log('popup.chrome.runtime.lastError.message:', chrome.runtime.lastError.message);
-              setPageContent(chrome.runtime.lastError.message ?? "Error fetching content");
+        if (response?.content) {
+          setPageContent(response.content);
+          setSummary(response.summary ?? "No summary");
+          setTabIndex(0);
+        } else {
+          console.error("No response or content received.");
+          setPageContent("No response or content received.");
+          setIsError(true);
+        }
 
-              setSummary("Error of summarizing content");
-
-              setIsError(true);
-
-              console.log("response::isError::",response);
-              setProcessing(false);
-              return;
-            }
-
-       
-            if (response?.content) {
-                setPageContent(response.content);
-                setSummary(response.summary ?? "No summary");
-                setTabIndex(0);
-            } else {
-              console.error('No response or content received.');
-              setPageContent('No response or content received.');
-              setIsError(true);
-            }
-
-            setProcessing(false);
-          }
-        );
+        setProcessing(false);
       }
-    });
-  }, []); // Empty dependency array ensures `fetchContent` is stable.
+    );
+  }, []); 
+
 
   useEffect(() => {
     fetchContent();
@@ -76,7 +61,7 @@ const Popup = () => {
   return (
     <div style={{color: isError ? "#d00" : "#222",  minWidth: '460px', padding:"4px", border:"1px solid #ccc", background:"#fff"}} 
     className={`p-4 max-w-xl bg-white rounded-lg shadow-md w-full${isError ? ' text-red-400' : ' text-gray-800'}`}>
-      <h2 className='text-2xl'>Summify v1.3.1</h2>
+      <h2 className='text-2xl'>Summify v1.3.3</h2>
       {(pageContent && summary) ? <TabbedView tabs={tabs} selected={tabIndex}/> : (
         <p>
           {processing ? <BeatLoader size={8} color="#aaa" /> : <>Start soon...</>}
