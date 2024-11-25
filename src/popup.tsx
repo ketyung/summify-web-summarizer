@@ -14,15 +14,22 @@ const Popup = () => {
 
   const [tabIndex, setTabIndex] = useState(0);
 
+  const [processing, setProcessing] = useState(false);
+
   // Callback function to fetch content
   const fetchContent = useCallback(() => {
 
     setIsError(false);
+
+    setProcessing(true);
+
+    console.log("going to send sumPage action...");
+
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0]?.id) {
         chrome.tabs.sendMessage(
           tabs[0].id,
-          { action: "summarizePage" },
+          { action: "sumPage" },
           (response) => {
             if (chrome.runtime.lastError) {
               console.log('popup.chrome.runtime.lastError.message:', chrome.runtime.lastError.message);
@@ -31,6 +38,9 @@ const Popup = () => {
               setSummary("Error of summarizing content");
 
               setIsError(true);
+
+              console.log("response::isError::",response);
+              setProcessing(false);
               return;
             }
 
@@ -44,6 +54,8 @@ const Popup = () => {
               setPageContent('No response or content received.');
               setIsError(true);
             }
+
+            setProcessing(false);
           }
         );
       }
@@ -64,14 +76,14 @@ const Popup = () => {
   return (
     <div style={{color: isError ? "#d00" : "#222",  minWidth: '460px', padding:"4px", border:"1px solid #ccc", background:"#fff"}} 
     className={`p-4 max-w-xl bg-white rounded-lg shadow-md w-full${isError ? ' text-red-400' : ' text-gray-800'}`}>
-      <h2 className='text-2xl'>Summify v1.2.9</h2>
+      <h2 className='text-2xl'>Summify v1.3.1</h2>
       {(pageContent && summary) ? <TabbedView tabs={tabs} selected={tabIndex}/> : (
         <p>
-          <BeatLoader size={8} color="#aaa" />
+          {processing ? <BeatLoader size={8} color="#aaa" /> : <>Start soon...</>}
         </p>
       )}
 
-      {isError && <button className='p-2 w-32' onClick={(e)=>{
+      {isError && <button className='p-2 w-32' disabled={processing} onClick={(e)=>{
          e.preventDefault();
          setIsError(false);
          setTimeout(()=>{

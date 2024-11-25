@@ -2,7 +2,7 @@ console.log("Background script running!");
 
 // Listen for messages from the popup
 chrome.runtime.onMessage.addListener(async (message, _sender, sendResponse) => {
-  if (message.type === "summarizePage") {
+  if (message.type === "sumPage") {
     await handleSummarizePage(sendResponse);
     return true; // Keep the message channel open for async responses
   }
