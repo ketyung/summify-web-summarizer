@@ -45,7 +45,7 @@ const Popup = () => {
   return (
     <div style={{color: isError ? "#d00" : "#222",  minWidth: '460px', padding:"4px", border:"1px solid #ccc", background:"#fff"}} 
     className={`p-4 max-w-xl bg-white rounded-lg shadow-md w-full${isError ? ' text-red-400' : ' text-gray-800'}`}>
-      <h2 className='text-2xl'>Summify v1.2.6</h2>
+      <h2 className='text-2xl'>Summify v1.2.7</h2>
       <h2 className="font-bold text-lg mb-2">Page Content:</h2>
       {pageContent ? (
         <p className={"whitespace-pre-wrap"}>{pageContent}</p>
@@ -54,6 +54,14 @@ const Popup = () => {
           <BeatLoader size={8} color="#aaa" />
         </p>
       )}
+
+      {isError && <button className='p-2 w-32' onClick={(e)=>{
+         e.preventDefault();
+         setIsError(false);
+         setTimeout(()=>{
+            fetchContent();
+         },500);
+      }}>Try again</button>}
     </div>
   );
 };
