@@ -29,7 +29,7 @@ const Popup = () => {
       if (tabs[0]?.id) {
         chrome.tabs.sendMessage(
           tabs[0].id,
-          { action: "sumPage" },
+          { action: "fetchPageContent" },
           (response) => {
             if (chrome.runtime.lastError) {
               console.log('popup.chrome.runtime.lastError.message:', chrome.runtime.lastError.message);
@@ -45,9 +45,9 @@ const Popup = () => {
             }
 
        
-            if (response?.content && response?.summary) {
+            if (response?.content) {
                 setPageContent(response.content);
-                setSummary(response.summary);
+                setSummary(response.summary ?? "No summary");
                 setTabIndex(0);
             } else {
               console.error('No response or content received.');
@@ -68,8 +68,8 @@ const Popup = () => {
 
 
   const tabs : Tab[] = [{title:"Summary",  view:
-  <div className="whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html:summary ?? ""}}/>},
-  {title:"Original", view: <div className="whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html:pageContent ?? ""}}/>}];
+  <div className="whitespace-pre-wrap p-2" dangerouslySetInnerHTML={{ __html:summary ?? ""}}/>},
+  {title:"Original", view: <div className="whitespace-pre-wrap p-2" dangerouslySetInnerHTML={{ __html:pageContent ?? ""}}/>}];
 
 
   
