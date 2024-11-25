@@ -1,11 +1,18 @@
 import { useState, useEffect, useCallback } from 'react';
 import ReactDOM from 'react-dom/client';  // Import createRoot from 'react-dom/client'
 import { BeatLoader } from 'react-spinners';
+import { TabbedView , Tab } from 'pix0-core-ui';
 
 const Popup = () => {
   const [pageContent, setPageContent] = useState<string>();
 
+  const [summary, setSummary] = useState<string>();
+
+
   const [isError, setIsError] = useState(false);
+
+
+  const [tabIndex, setTabIndex] = useState(0);
 
   // Callback function to fetch content
   const fetchContent = useCallback(() => {
@@ -15,18 +22,23 @@ const Popup = () => {
       if (tabs[0]?.id) {
         chrome.tabs.sendMessage(
           tabs[0].id,
-          { action: "fetchPageContent" },
+          { action: "summarizePage" },
           (response) => {
             if (chrome.runtime.lastError) {
               console.log('popup.chrome.runtime.lastError.message:', chrome.runtime.lastError.message);
               setPageContent(chrome.runtime.lastError.message ?? "Error fetching content");
+
+              setSummary("Error of summarizing content");
+
               setIsError(true);
               return;
             }
 
        
-            if (response?.content) {
-              setPageContent(response.content);
+            if (response?.content && response?.summary) {
+                setPageContent(response.content);
+                setSummary(response.summary);
+                setTabIndex(0);
             } else {
               console.error('No response or content received.');
               setPageContent('No response or content received.');
@@ -42,14 +54,18 @@ const Popup = () => {
     fetchContent();
   }, [fetchContent]);
 
+
+  const tabs : Tab[] = [{title:"Summary",  view:
+  <div className="whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html:summary ?? ""}}/>},
+  {title:"Original", view: <div className="whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html:pageContent ?? ""}}/>}];
+
+
+  
   return (
     <div style={{color: isError ? "#d00" : "#222",  minWidth: '460px', padding:"4px", border:"1px solid #ccc", background:"#fff"}} 
     className={`p-4 max-w-xl bg-white rounded-lg shadow-md w-full${isError ? ' text-red-400' : ' text-gray-800'}`}>
-      <h2 className='text-2xl'>Summify v1.2.7</h2>
-      <h2 className="font-bold text-lg mb-2">Page Content:</h2>
-      {pageContent ? (
-        <p className={"whitespace-pre-wrap"}>{pageContent}</p>
-      ) : (
+      <h2 className='text-2xl'>Summify v1.2.9</h2>
+      {(pageContent && summary) ? <TabbedView tabs={tabs} selected={tabIndex}/> : (
         <p>
           <BeatLoader size={8} color="#aaa" />
         </p>
