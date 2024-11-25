@@ -14,7 +14,7 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
       const article = reader.parse();
 
       if (article) {
-        sendResponse({ title: article.title, content: article.content });
+        sendResponse({ title: article.title, content: article.content.trim() });
       } else {
         sendResponse({ error: "Unable to parse the content." });
       }

@@ -53,22 +53,22 @@ const Popup = () => {
 
 
   const tabs : Tab[] = [{title:"Summary",  view:
-  <div className="whitespace-pre-wrap p-2" dangerouslySetInnerHTML={{ __html:summary ?? ""}}/>},
-  {title:"Original", view: <div className="whitespace-pre-wrap p-2" dangerouslySetInnerHTML={{ __html:pageContent ?? ""}}/>}];
+  <div className="whitespace-pre-wrap p-2 pt-4 h-full" dangerouslySetInnerHTML={{ __html:summary ?? ""}}/>},
+  {title:"Original", view: <div className="whitespace-pre-wrap p-2 pt-4 h-full" dangerouslySetInnerHTML={{ __html:pageContent ?? ""}}/>}];
 
 
   
   return (
-    <div style={{color: isError ? "#d00" : "#222",  minWidth: '460px', padding:"4px", border:"1px solid #ccc", background:"#fff"}} 
-    className={`p-4 max-w-xl bg-white rounded-lg shadow-md w-full${isError ? ' text-red-400' : ' text-gray-800'}`}>
-      <h2 className='text-2xl'>Summify v1.3.3</h2>
+    <div style={{minWidth: '460px', padding:"4px"}} 
+    className={`p-4 bg-white rounded-lg shadow-md w-full${isError ? ' text-red-400' : ' text-gray-800'}`}>
+      <h2 className='text-2xl'>Summify v1.3.5</h2>
       {(pageContent && summary) ? <TabbedView tabs={tabs} selected={tabIndex}/> : (
         <p>
           {processing ? <BeatLoader size={8} color="#aaa" /> : <>Start soon...</>}
         </p>
       )}
 
-      {isError && <button className='p-2 w-32' disabled={processing} onClick={(e)=>{
+      {isError && <button className='p-2 w-32 text-gray-100 rounded-full bg-gray-800' disabled={processing} onClick={(e)=>{
          e.preventDefault();
          setIsError(false);
          setTimeout(()=>{

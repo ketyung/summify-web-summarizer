@@ -77,7 +77,7 @@ const summarizeText = async (text: string): Promise<string> => {
     const data = await response.json();
     return data.summary;
     */
-    return `<h1>Summarized:</h1>${text}`; // Dummy summarization for testing
+    return `Summarized***::<br/>${text}`; // Dummy summarization for testing
   } catch (error) {
     console.error("Failed to summarize text:", error);
     return "Error generating summary.";
