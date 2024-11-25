@@ -2,10 +2,19 @@ console.log("Background script running!");
 
 // Listen for messages from the popup
 chrome.runtime.onMessage.addListener(async (message, _sender, sendResponse) => {
+  
+  console.log("message type is::", message.type);
+  
   if (message.type === "sumPage") {
-    await handleSummarizePage(sendResponse);
+
+    console.log("going to sumPage");
+
+    await handleSummarizePage((r)=>{
+        sendResponse(r);
+    });
     return true; // Keep the message channel open for async responses
   }
+
 });
 
 const handleSummarizePage = async (sendResponse: (response: any) => void) => {
@@ -13,6 +22,8 @@ const handleSummarizePage = async (sendResponse: (response: any) => void) => {
     // Get active tab
     const tabs = await getActiveTab();
     if (!tabs[0]?.id) {
+
+      console.log("quit here at background as no active tab found!");
       sendResponse({ error: "No active tab found." });
       return;
     }
