@@ -5,13 +5,13 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   
   if (message.type === "sumPage") {
   
-    handleSummarizePage(sendResponse);
+    handleSummarizePage(sendResponse, message.style);
     return true; // Keep the message channel open for async responses
   }
 
 });
 
-const handleSummarizePage = async (sendResponse: (response: any) => void) => {
+const handleSummarizePage = async (sendResponse: (response: any) => void, style: string) => {
   try {
     // Get active tab
     const tabs = await getActiveTab();
@@ -28,7 +28,7 @@ const handleSummarizePage = async (sendResponse: (response: any) => void) => {
     
     if (response?.content) {
       // Summarize the content
-      const summary = await summarizeText(response.content);
+      const summary = await summarizeText(response.content, style);
 
       sendResponse({ title: response.title, content: response.content, summary });
     } else {
@@ -62,16 +62,16 @@ const sendMessageToTab = (tabId: number, message: any): Promise<any> => {
 };
 
 // Example function to send the content to your API for summarization
-const summarizeText = async (text: string): Promise<string> => {
+const summarizeText = async (text: string, style : string ): Promise<string> => {
   try {
 
-    const postData : any = { content : text };
+    const postData : any = { content : text, summStyle: style  };
 
     const response = await fetch("https://tools.techchee.com/api/gai/summWeb", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        'Authorization': `Bearer Temp_Chrome_Ext_Key`, 
+        'Authorization': `Bearer Temp_Chrome_Ext_Key_`, 
       },
       body: JSON.stringify({data : postData}),
     });
