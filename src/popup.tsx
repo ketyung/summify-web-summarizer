@@ -63,7 +63,7 @@ const Popup = () => {
         setProcessing(false);
       }
     );
-  }, [auto]); 
+  }, [auto, summStyle, language]); 
 
 
   useEffect(() => {
@@ -73,7 +73,7 @@ const Popup = () => {
 
   const tabs : Tab[] = [{title:"Summary",  view:
   <>
-  {summary && <CopyButton textToCopy={summary} className='rounded-full w-24 p-1 bg-gray-300'/>}
+  {summary && <CopyButton textToCopy={summary} className='rounded-full w-24 p-1 bg-gray-300 mb-2'/>}
   <div className="whitespace-pre-wrap max-h-96 text-xs overflow-y-auto xl:max-w-screen-2xl max-w-4xl" dangerouslySetInnerHTML={{ __html:summary ?? ""}}/>
   </>
   },
@@ -83,8 +83,8 @@ const Popup = () => {
   
   return (
     <div className={`min-h-96 p-4 bg-white rounded-lg shadow-md w-full${isError ? ' text-red-400' : ' text-gray-800'}`}>
-      <h2 className='text-2xl my-2 flex'><span className='mr-2'>Summify v1.4.1</span><FieldLabel className="inline flex ml-2 mt-1 mr-1" title="Auto Summarization">
-          <Checkbox checked={auto} setChecked={(c)=>{
+      <h2 className='text-2xl my-2 flex'><span className='mr-2'>Summify v1.4.2</span><FieldLabel className="inline flex ml-2 mt-1.5 mr-4" title="Auto Summarization">
+          <Checkbox lightTickColor='#ff2' checked={auto} setChecked={(c)=>{
               setAuto(c);
           }}/>
         </FieldLabel></h2>
@@ -110,7 +110,7 @@ const Popup = () => {
       <div className='h-full'>
       {(pageContent && summary) ? <TabbedView groupId='_1stTab' tabs={tabs} selected={tabIndex} setSelected={setTabIndex}/> : (
     
-        <div className='my-4'>{processing ? <> Summarizing<BeatLoader size={8} color="#aaa" className='ml-1 inline' /></> : <>Start soon...</>}</div>
+        <div className='my-4'>{processing ? <div className='flex'>Summarizing<BeatLoader size={8} color="#aaa" className='ml-1 inline mt-1' /></div> : <></>}</div>
       )}
       </div>
       {isError && <button className='p-2 w-32 text-gray-100 rounded-full bg-gray-800' disabled={processing} onClick={(e)=>{

@@ -5,6 +5,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   
   if (message.type === "sumPage") {
   
+    
     handleSummarizePage(sendResponse, message.style, message.language);
     return true; // Keep the message channel open for async responses
   }
@@ -65,13 +66,15 @@ const sendMessageToTab = (tabId: number, message: any): Promise<any> => {
 const summarizeText = async (text: string, style : string, language? : string ): Promise<string> => {
   try {
 
-    const postData : any = { content : text, summStyle: style, language  };
+    const postData : any = { content : text, summStyle: style, language: language  };
+
+    //console.log("post.data::", postData);
 
     const response = await fetch("https://tools.techchee.com/api/gai/summWeb", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        'Authorization': `Bearer Temp_Chrome_Ext_Key_`, 
+        'Authorization': `Bearer Temp_Chrome_Ext_Key`, 
       },
       body: JSON.stringify({data : postData}),
     });
@@ -82,8 +85,13 @@ const summarizeText = async (text: string, style : string, language? : string ):
     if ( data.status === 1)
         return data.text;
     else {
+
         if (data.error){
             return data.error;
+        }
+
+        if ( data.message ){
+            return data.message;
         }
         return 'Possibly error';
     }
