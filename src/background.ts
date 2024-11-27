@@ -5,13 +5,13 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   
   if (message.type === "sumPage") {
   
-    handleSummarizePage(sendResponse, message.style);
+    handleSummarizePage(sendResponse, message.style, message.language);
     return true; // Keep the message channel open for async responses
   }
 
 });
 
-const handleSummarizePage = async (sendResponse: (response: any) => void, style: string) => {
+const handleSummarizePage = async (sendResponse: (response: any) => void, style: string, language ? : string ) => {
   try {
     // Get active tab
     const tabs = await getActiveTab();
@@ -28,7 +28,7 @@ const handleSummarizePage = async (sendResponse: (response: any) => void, style:
     
     if (response?.content) {
       // Summarize the content
-      const summary = await summarizeText(response.content, style);
+      const summary = await summarizeText(response.content, style, language);
 
       sendResponse({ title: response.title, content: response.content, summary });
     } else {
@@ -62,10 +62,10 @@ const sendMessageToTab = (tabId: number, message: any): Promise<any> => {
 };
 
 // Example function to send the content to your API for summarization
-const summarizeText = async (text: string, style : string ): Promise<string> => {
+const summarizeText = async (text: string, style : string, language? : string ): Promise<string> => {
   try {
 
-    const postData : any = { content : text, summStyle: style  };
+    const postData : any = { content : text, summStyle: style, language  };
 
     const response = await fetch("https://tools.techchee.com/api/gai/summWeb", {
       method: "POST",

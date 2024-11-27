@@ -6,6 +6,7 @@ import CopyButton from './copyButton';
 import FieldLabel from './components/FieldLabel';
 import StyleSel from './components/StyleSel';
 import { SummarizationStyle } from './components/webSumStyle';
+import LanSel from './components/LanSel';
 
 const Popup = () => {
   const [pageContent, setPageContent] = useState<string>();
@@ -24,6 +25,8 @@ const Popup = () => {
 
   const [summStyle, setSummStyle] = useState<string>(SummarizationStyle.BULLET_POINT);
 
+  const [language, setLanguage] = useState("en");
+
   // Callback function to fetch content
   const fetchContent = useCallback(async (byPassAutoCheck : boolean = false) => {
 
@@ -37,7 +40,7 @@ const Popup = () => {
     setProcessing(true);
 
     chrome.runtime.sendMessage(
-      { type: "sumPage", style: summStyle }, // Sending 'sumPage' action to the background script
+      { type: "sumPage", style: summStyle, language }, // Sending 'sumPage' action to the background script
       (response) => {
         if (chrome.runtime.lastError) {
           setPageContent(chrome.runtime.lastError.message ?? "Error fetching content");
@@ -80,7 +83,7 @@ const Popup = () => {
   
   return (
     <div className={`min-h-96 p-4 bg-white rounded-lg shadow-md w-full${isError ? ' text-red-400' : ' text-gray-800'}`}>
-      <h2 className='text-2xl my-2 flex'><span className='mr-2'>Summify v1.4.0</span><FieldLabel className="inline flex ml-2 mt-1 mr-1" title="Auto Summarization">
+      <h2 className='text-2xl my-2 flex'><span className='mr-2'>Summify v1.4.1</span><FieldLabel className="inline flex ml-2 mt-1 mr-1" title="Auto Summarization">
           <Checkbox checked={auto} setChecked={(c)=>{
               setAuto(c);
           }}/>
@@ -90,7 +93,11 @@ const Popup = () => {
           <StyleSel setSelectedStyle={setSummStyle} selectedStyle={summStyle ?? ""}/>
         </FieldLabel>
       </div>
-      
+      <div className='my-2'>
+        <FieldLabel title="Summary Language">
+          <LanSel setSelectedLanguage={setLanguage} selectedLanguage={language}/>
+        </FieldLabel>
+      </div>
       <div className='my-2'>
       <Button disabled={processing} onClick={async (e)=>{
             e.preventDefault();
