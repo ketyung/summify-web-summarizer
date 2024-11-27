@@ -61,7 +61,7 @@ const Popup = () => {
   return (
     <div style={{minWidth: '460px', padding:"4px"}} 
     className={`min-h-96 p-4 bg-white rounded-lg shadow-md w-full${isError ? ' text-red-400' : ' text-gray-800'}`}>
-      <h2 className='text-2xl'>Summify v1.3.5</h2>
+      <h2 className='text-2xl'>Summify v1.3.7</h2>
       {(pageContent && summary) ? <TabbedView tabs={tabs} selected={tabIndex} setSelected={setTabIndex}/> : (
         <p>
           {processing ? <BeatLoader size={8} color="#aaa" /> : <>Start soon...</>}

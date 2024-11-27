@@ -64,20 +64,30 @@ const sendMessageToTab = (tabId: number, message: any): Promise<any> => {
 // Example function to send the content to your API for summarization
 const summarizeText = async (text: string): Promise<string> => {
   try {
-    // You can call your API for summarization here
-    // Example:
-    /*
-    const response = await fetch("https://api.your-ai.com/summarize", {
+
+    const postData : any = { content : text };
+
+    const response = await fetch("https://tools.techchee.com/api/gai/summWeb", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        'Authorization': `Bearer Temp_Chrome_Ext_Key`, 
       },
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({data : postData}),
     });
     const data = await response.json();
-    return data.summary;
-    */
-    return `Summarized***::<br/>${text}`; // Dummy summarization for testing
+
+    //console.log("at bg::data.is:",data);
+    
+    if ( data.status === 1)
+        return data.text;
+    else {
+        if (data.error){
+            return data.error;
+        }
+        return 'Possibly error';
+    }
+    
   } catch (error) {
     console.error("Failed to summarize text:", error);
     return "Error generating summary.";
