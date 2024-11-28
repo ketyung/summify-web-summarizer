@@ -1,4 +1,14 @@
+
 console.log("Background script running!");
+
+
+let hasBuiltInSummarizer = false;
+
+if ('ai' in self && 'summarizer' in (self.ai as any)) {
+    // The Summarizer API is supported.
+    console.log("The summarizer API is supported");
+    hasBuiltInSummarizer = true; 
+}
 
 // Listen for messages from the popup
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
@@ -62,8 +72,20 @@ const sendMessageToTab = (tabId: number, message: any): Promise<any> => {
   });
 };
 
-// Example function to send the content to your API for summarization
+
 const summarizeText = async (text: string, style : string, language? : string ): Promise<string> => {
+
+    if ( hasBuiltInSummarizer ) {
+
+        return await summarizeTextByChromeSummarizer(text, style, language);
+    }else {
+
+        return await summarizeTextByApi(text, style, language);
+    }
+}
+
+// Example function to send the content to your API for summarization
+const summarizeTextByApi = async (text: string, style : string, language? : string ): Promise<string> => {
   try {
 
     const postData : any = { content : text, summStyle: style, language: language  };
@@ -101,3 +123,59 @@ const summarizeText = async (text: string, style : string, language? : string ):
     return "Error generating summary.";
   }
 };
+
+
+// Example function to send the content to your API for summarization
+const summarizeTextByChromeSummarizer = async (text: string, style : string, _language? : string ): Promise<string> => {
+
+
+  const ai : any = 'ai' in self && 'summarizer' in (self.ai as any) ? (self.ai as any) : undefined ;
+
+
+  if ( ai.summarizer === undefined) {
+
+      return 'Undefined summarizer';
+  }
+
+  try {
+     
+      const options = {
+        sharedContext: text ,
+        type: style,
+        format: 'markdown',
+        length: 'medium',
+      };
+      
+      const available = (await ai.summarizer.capabilities()).available;
+      let summarizer;
+      if (available === 'no') {
+          // The Summarizer API isn't usable.
+          //console.log("summarizer is:",ai.summarizer );
+          return 'Summarizer is NOT available';
+      }
+      if (available === 'readily') {
+        // The Summarizer API can be used immediately .
+          summarizer = await ai.summarizer.create(options);
+      } else {
+          // The Summarizer API can be used after the model is downloaded.
+          summarizer = await ai.summarizer.create(options);
+          summarizer.addEventListener('downloadprogress', (e: any) => {
+            console.log(e.loaded, e.total);
+          });
+          await summarizer.ready;
+      }
+      console.log("Going to summarize using built-in chrome summarizer");
+
+    
+      const summary = await summarizer.summarize(text , {
+        context: text ,
+      });
+    
+      return summary;
+  }catch(e : any ){
+
+      return e.message;
+  }
+
+
+}
