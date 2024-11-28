@@ -164,7 +164,9 @@ const summarizeTextByChromeSummarizer = async (text: string, style : string, _la
           });
           await summarizer.ready;
       }
-      console.log("Going to summarize using built-in chrome summarizer");
+
+
+      //console.log("Going to summarize using built-in chrome summarizer with options:", options);
 
     
       const summary = await summarizer.summarize(text , {
@@ -174,7 +176,7 @@ const summarizeTextByChromeSummarizer = async (text: string, style : string, _la
       return summary;
   }catch(e : any ){
 
-      return e.message;
+      return `Error: ${e.message}`;
   }
 
 

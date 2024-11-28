@@ -27,7 +27,7 @@ export function getChromeSummTypeValue(type: ChromeSummType): string {
 export function stringToChromeSummType(input: string): ChromeSummType {
     const formattedInput = input.trim().toLowerCase(); // Normalize input
     const typeMap: { [key: string]: ChromeSummType } = {
-      "key-points (default)": ChromeSummType.KeyPoints,
+      "key-points": ChromeSummType.KeyPoints,
       "tl;dr": ChromeSummType.SummaryAtAGlance,
       teaser: ChromeSummType.BriefPreview,
       headline: ChromeSummType.CatchyHeadline,

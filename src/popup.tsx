@@ -4,10 +4,11 @@ import { BeatLoader } from 'react-spinners';
 import { TabbedView , Tab, Checkbox, Button } from 'pix0-core-ui';
 import CopyButton from './copyButton';
 import FieldLabel from './components/FieldLabel';
-import StyleSel from './components/StyleSel';
+import StyleSel, { hasBuiltInSummarizer } from './components/StyleSel';
 import { SummarizationStyle } from './components/webSumStyle';
 import LanSel from './components/LanSel';
 import { GoAlert } from 'react-icons/go';
+import { ChromeSummType, getChromeSummTypeValue } from './components/chromeSumStyle';
 
 const Popup = () => {
   const [pageContent, setPageContent] = useState<string>();
@@ -24,7 +25,7 @@ const Popup = () => {
 
   const [auto, setAuto] = useState(false);
 
-  const [summStyle, setSummStyle] = useState<string>(SummarizationStyle.BULLET_POINT);
+  const [summStyle, setSummStyle] = useState<string>( hasBuiltInSummarizer ?  getChromeSummTypeValue(ChromeSummType.KeyPoints) : SummarizationStyle.BULLET_POINT);
 
   const [language, setLanguage] = useState("en");
 
@@ -50,6 +51,7 @@ const Popup = () => {
 
     setIsError(false);
     setProcessing(true);
+    setSummary(undefined);
 
     chrome.runtime.sendMessage(
       { type: "sumPage", style: summStyle, language }, // Sending 'sumPage' action to the background script
