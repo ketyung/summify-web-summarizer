@@ -7,6 +7,7 @@ import FieldLabel from './components/FieldLabel';
 import StyleSel from './components/StyleSel';
 import { SummarizationStyle } from './components/webSumStyle';
 import LanSel from './components/LanSel';
+import { GoAlert } from 'react-icons/go';
 
 const Popup = () => {
   const [pageContent, setPageContent] = useState<string>();
@@ -30,10 +31,16 @@ const Popup = () => {
   const [hasPermission, setHasPermission] = useState(false);
 
   const [showConfirm, setShowConfirm] = useState(false);
+
+  const [error, setError] = useState<string>();
   
 
   // Callback function to fetch content
   const fetchContent = useCallback(async (byPassAutoCheck : boolean = false) => {
+
+    if (!hasPermission) {
+        return;
+    }
 
     if (!byPassAutoCheck) {
       if ( !auto ){
@@ -50,6 +57,7 @@ const Popup = () => {
         if (chrome.runtime.lastError) {
           setPageContent(chrome.runtime.lastError.message ?? "Error fetching content");
           setSummary("Error of summarizing content");
+          setError("Error of summarizing content");
           setIsError(true);
           setProcessing(false);
           return;
@@ -62,13 +70,14 @@ const Popup = () => {
         } else {
           console.error("No response or content received.");
           setPageContent("No response or content received.");
+          setError("No response or content received.");
           setIsError(true);
         }
 
         setProcessing(false);
       }
     );
-  }, [auto, summStyle, language]); 
+  }, [auto, summStyle, language, hasPermission]); 
 
 
   useEffect(() => {
@@ -91,13 +100,24 @@ const Popup = () => {
       <h2 className='text-2xl my-2 flex'><span className='mr-2'>Summify v1.4.3</span><FieldLabel className="inline flex ml-2 mt-1.5 mr-4" title="Auto Summarization">
           <Checkbox lightTickColor='#ff2' checked={auto} setChecked={(c)=>{
 
-              if (!hasPermission) {
-                  setShowConfirm(true);
-              }else {
-                  setAuto(c);
-              }
+               setAuto(c);
+              
           }}/>
         </FieldLabel></h2>
+        {(showConfirm || !hasPermission) && 
+        <div className='border border-red-500 rounded p-2 my-2'>
+        <GoAlert className='inline w-5 h-5 mr-1'/>To summarize this page, Summify needs temporary access to its content. 
+        Please note, we do NOT store your content on our servers or anywhere else. Do you want to proceed?
+        <div className='my-4 flex'>
+          <Button className='rounded-full p-2 w-24 bg-green-500 text-gray-100 mr-4' onClick={(e)=>{
+              e.preventDefault();
+              setHasPermission(true);
+              setShowConfirm(false);
+              setError(undefined);
+              setIsError(false);
+          }}>Yes</Button>
+        </div>
+      </div>}
       <div className='my-2'>
         <FieldLabel title="Summary Style">
           <StyleSel setSelectedStyle={setSummStyle} selectedStyle={summStyle ?? ""}/>
@@ -108,30 +128,18 @@ const Popup = () => {
           <LanSel setSelectedLanguage={setLanguage} selectedLanguage={language}/>
         </FieldLabel>
       </div>
-      {showConfirm && 
-        <div className='border border-red-500 rounded p-2 my-2'>
-        To summarize this page, Summify needs temporary access to its content. 
-        Please note, we do NOT store your content on our servers or anywhere else. Do you want to proceed?
-        <div className='my-4 flex'>
-          <Button className='rounded-full p-2 w-24 bg-green-500 text-gray-100 mr-4' onClick={async (e)=>{
-              e.preventDefault();
-              setHasPermission(true);
-              setShowConfirm(false);
-              await fetchContent(true);
-          }}>Yes</Button>
-
-          <Button className='rounded-full p-2 w-24 bg-gray-700 text-gray-100 ml-4' onClick={(e)=>{
-              e.preventDefault();
-              setHasPermission(false);
-              setShowConfirm(false);
-          }}>No</Button>
-        </div>
-      </div>}
+      
       <div className='my-2'>
       <Button disabled={processing} onClick={async (e)=>{
             e.preventDefault();
             if ( !hasPermission) {
-                setShowConfirm(true);
+                if ( showConfirm ){
+                    setIsError(true);
+                    setError("Please click Yes above to grant the permisson!");
+                }else {
+                    setShowConfirm(true);
+                }
+                
             }else {
                 await fetchContent(true);
             }
@@ -146,13 +154,15 @@ const Popup = () => {
         <div className='my-4'>{processing ? <div className='flex'>Summarizing<BeatLoader size={8} color="#aaa" className='ml-1 inline mt-1' /></div> : <></>}</div>
       )}
       </div>
-      {isError && <button className='p-2 w-32 text-gray-100 rounded-full bg-gray-800' disabled={processing} onClick={(e)=>{
+      {isError && <div className='my-2'>
+        {error && <div className='text-red-600 text-xs my-2'>{error}</div>}
+        <Button className='p-2 w-32 text-gray-100 rounded-full bg-gray-800' disabled={processing} onClick={(e)=>{
          e.preventDefault();
          setIsError(false);
-         setTimeout(()=>{
-            fetchContent();
+         setTimeout(async ()=>{
+            await fetchContent(true);
          },500);
-      }}>Try again</button>}
+      }}>Try again</Button></div>}
 
      
      
