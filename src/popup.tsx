@@ -27,6 +27,11 @@ const Popup = () => {
 
   const [language, setLanguage] = useState("en");
 
+  const [hasPermission, setHasPermission] = useState(false);
+
+  const [showConfirm, setShowConfirm] = useState(false);
+  
+
   // Callback function to fetch content
   const fetchContent = useCallback(async (byPassAutoCheck : boolean = false) => {
 
@@ -83,9 +88,14 @@ const Popup = () => {
   
   return (
     <div className={`min-h-96 p-4 bg-white rounded-lg shadow-md w-full${isError ? ' text-red-400' : ' text-gray-800'}`}>
-      <h2 className='text-2xl my-2 flex'><span className='mr-2'>Summify v1.4.2</span><FieldLabel className="inline flex ml-2 mt-1.5 mr-4" title="Auto Summarization">
+      <h2 className='text-2xl my-2 flex'><span className='mr-2'>Summify v1.4.3</span><FieldLabel className="inline flex ml-2 mt-1.5 mr-4" title="Auto Summarization">
           <Checkbox lightTickColor='#ff2' checked={auto} setChecked={(c)=>{
-              setAuto(c);
+
+              if (!hasPermission) {
+                  setShowConfirm(true);
+              }else {
+                  setAuto(c);
+              }
           }}/>
         </FieldLabel></h2>
       <div className='my-2'>
@@ -98,10 +108,33 @@ const Popup = () => {
           <LanSel setSelectedLanguage={setLanguage} selectedLanguage={language}/>
         </FieldLabel>
       </div>
+      {showConfirm && 
+        <div className='border border-red-500 rounded p-2 my-2'>
+        To summarize this page, Summify needs temporary access to its content. 
+        Please note, we do NOT store your content on our servers or anywhere else. Do you want to proceed?
+        <div className='my-4 flex'>
+          <Button className='rounded-full p-2 w-24 bg-green-500 text-gray-100 mr-4' onClick={async (e)=>{
+              e.preventDefault();
+              setHasPermission(true);
+              setShowConfirm(false);
+              await fetchContent(true);
+          }}>Yes</Button>
+
+          <Button className='rounded-full p-2 w-24 bg-gray-700 text-gray-100 ml-4' onClick={(e)=>{
+              e.preventDefault();
+              setHasPermission(false);
+              setShowConfirm(false);
+          }}>No</Button>
+        </div>
+      </div>}
       <div className='my-2'>
       <Button disabled={processing} onClick={async (e)=>{
             e.preventDefault();
-            await fetchContent(true);
+            if ( !hasPermission) {
+                setShowConfirm(true);
+            }else {
+                await fetchContent(true);
+            }
         }}
         className="my-2 w-64 py-2 px-4 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors xl:text-base text-xs">
         {processing ? <BeatLoader size={6} color='#aaa'/> : <>Summarize</>}
@@ -120,6 +153,9 @@ const Popup = () => {
             fetchContent();
          },500);
       }}>Try again</button>}
+
+     
+     
     </div>
   );
 };

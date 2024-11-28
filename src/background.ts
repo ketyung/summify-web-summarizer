@@ -74,7 +74,7 @@ const summarizeText = async (text: string, style : string, language? : string ):
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        'Authorization': `Bearer Temp_Chrome_Ext_Key`, 
+        'Authorization': `Bearer Temp_Chrome_Ext_Key_`, 
       },
       body: JSON.stringify({data : postData}),
     });
