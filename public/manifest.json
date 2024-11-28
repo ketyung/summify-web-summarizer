@@ -4,6 +4,7 @@
   "version": "1.4.3",
   "description": "A Chrome extension that summarizes any website you’re browsing, saving you time.",
   "permissions": ["activeTab", "scripting"],
+  "trial_tokens": ["Alg0dq5njr5ZTNusQkTNC4QhFrPqq5QvdobyqZwRDyfetzz0IGyLYL+onjBipNg487/0qxXqdLPzHstuRP/TtQAAAABzeyJvcmlnaW4iOiJjaHJvbWUtZXh0ZW5zaW9uOi8vbWJrbmxhZWtpZnBiYmFtY2xkY3Bibm5jbWVsZmhjZ2EiLCJmZWF0dXJlIjoiQUlTdW1tYXJpemF0aW9uQVBJIiwiZXhwaXJ5IjoxNzUzMTQyNDAwfQ=="],
   "icons": {
     "16": "icons/icon-16.png",
     "48": "icons/icon-48.png",
