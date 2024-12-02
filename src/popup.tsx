@@ -37,11 +37,13 @@ const Popup = () => {
 
     try {
      
-      const {content,title} = await chrome.storage.local.get(['content', 'title']);
+      //const {content,title} = await chrome.storage.local.get(['content', 'title']);
 
+
+      //console.log("content.is::", content);
 
       chrome.runtime.sendMessage(
-      { type: 'sumPage', style: summStyle, language, content, title  },
+      { type: 'sumPage', style: summStyle, language, /* content, title*/  },
       (sumResponse) => {
         if (chrome.runtime.lastError) {
           setError(chrome.runtime.lastError.message);

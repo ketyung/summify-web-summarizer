@@ -1,9 +1,11 @@
 import { Readability } from "@mozilla/readability";
 
+/*
+const injectButton = () =>{
 // Check if the page is not the popup page
-if (window.location.pathname !== '/popup.html') {
-        // Inject a floating button into the page
+  if (window.location.pathname !== '/popup.html') {
       // Inject a floating button into the page
+    // Inject a floating button into the page
     const button = document.createElement('button');
     button.style.position = 'fixed';
     button.style.top = '10px';
@@ -23,10 +25,10 @@ if (window.location.pathname !== '/popup.html') {
 
     // Add hover effect
     button.onmouseover = () => {
-      button.style.backgroundColor = '#0056b3';
+    button.style.backgroundColor = '#0056b3';
     };
     button.onmouseleave = () => {
-      button.style.backgroundColor = '#9922CC';
+    button.style.backgroundColor = '#9922CC';
     };
 
     // Create an image element for the icon
@@ -35,7 +37,7 @@ if (window.location.pathname !== '/popup.html') {
     icon.alt = 'Summify Icon';
     icon.style.width = '20px'; // Match the icon size
     icon.style.height = '20px';
-    
+
 
     // Create a text node for the button label
     const buttonText = document.createElement('span');
@@ -47,22 +49,27 @@ if (window.location.pathname !== '/popup.html') {
 
     // Handle click event to open the popup
     button.addEventListener('click', async () => {
-      
-        const article = getArticleFromDoc();
 
-        if ( article ) {
+    const article = getArticleFromDoc();
 
-            chrome.runtime.sendMessage({ action: 'openPopupWithTab',  article : article});
+    if ( article ) {
 
-        }
-       
-    });
+        chrome.runtime.sendMessage({ action: 'openPopupWithTab',  article : article});
 
-    // Add the button to the DOM
-    document.body.appendChild(button);
+    }
+ 
+});
+
+// Add the button to the DOM
+document.body.appendChild(button);
 
 }
 
+}
+
+
+injectButton();
+*/
 
 
 const getArticleFromDoc = () =>{

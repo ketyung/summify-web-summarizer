@@ -20,21 +20,33 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       if (tabs[0]?.id) {
         // Open the popup window
 
-        if ( message.article ){
-
-            await chrome.storage.local.set({ 'content': message.article.content});
-            await chrome.storage.local.set({ 'title': message.article.title});
-        }
-
+      
         chrome.windows.create({
           url: 'popup.html',
           type: 'popup',
           width: 800,
           height: 600,
-          left: 100,
-          top: 100
+          left: 100, // Position of the popup
+          top: 100,
+        }, async (_w : any) => {
+            // Send the tab ID to the popup or background
+            /*chrome.runtime.sendMessage({
+              action: 'openPopupWithTab',
+              tabId: tabs[0].id
+            });*/
+            console.log("windows.created::", _w);
+
+            if ( message.article ){
+                await chrome.storage.local.set({ 'content': message.article.content});
+                await chrome.storage.local.set({ 'title': message.article.title});
+            }
+  
+
         });
-      }
+      };
+
+   
+
     });
     //return true;
   }
