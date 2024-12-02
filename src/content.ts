@@ -47,7 +47,14 @@ if (window.location.pathname !== '/popup.html') {
 
     // Handle click event to open the popup
     button.addEventListener('click', () => {
-      chrome.runtime.sendMessage({ action: 'openPopupWithTab' });
+
+      const docClone = document.cloneNode(true) as Document;
+
+          // Pass the cloned document to Readability
+      const reader = new Readability(docClone);
+      const article = reader.parse();
+
+      chrome.runtime.sendMessage({ action: 'openPopupWithTab', acticle: article });
     });
 
     // Add the button to the DOM

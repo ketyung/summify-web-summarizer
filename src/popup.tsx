@@ -22,6 +22,17 @@ const Popup = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
 
+  const [article, setArticle] = useState<any>(null); // Store the article content
+
+  useEffect(() => {
+    // Listen for the message from background script after popup is opened
+    chrome.runtime.onMessage.addListener((message, _sender, _sendResponse) => {
+      if (message.action === 'sendArticleToPopup') {
+        setArticle(message.article); // Update state with the article data
+      }
+    });
+  }, []);
+
   const fetchContent = useCallback(async (byPassAutoCheck: boolean = false) => {
     if (!hasPermission || (!byPassAutoCheck && !auto)) {
       return;
@@ -33,13 +44,11 @@ const Popup = () => {
     setPageContent('');
 
     try {
-      // Assuming you're fetching content from the active tab or page
-      const response = await chrome.tabs.query({ active: true, currentWindow: true });
-
-      if (response.length > 0 && response[0].url) {
+      
+      if (article) {
         // Send the content to the background to get the summary
         chrome.runtime.sendMessage(
-          { type: 'sumPage', style: summStyle, language, content: response[0].url, title: document.title },
+          { type: 'sumPage', style: summStyle, language, content: article },
           (sumResponse) => {
             if (chrome.runtime.lastError) {
               setError(chrome.runtime.lastError.message);
