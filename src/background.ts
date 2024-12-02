@@ -16,9 +16,10 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     return true; // Keep the message channel open for async responses
   }else 
   if (message.action === 'openPopupWithTab') {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
       if (tabs[0]?.id) {
         // Open the popup window
+
         chrome.windows.create({
           url: 'popup.html',
           type: 'popup',
@@ -26,21 +27,14 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
           height: 600,
           left: 100,
           top: 100
-        }, (_w: any) => {
-         chrome.tabs.sendMessage(tabs[0]?.id ?? 0, {
-            action: 'sendArticleToPopup',
-            article: message.acticle // Send the article data
-          });
-
         });
       }
     });
-    return true;
-    
+    //return true;
   }
 });
 
-const handleSummarizePage = async (sendResponse: (response: any) => void, style: string, language ? : string ) => {
+const handleSummarizePage = async (sendResponse: (response: any) => void, style: string, language ? : string , content? : string, title? : string ) => {
   try {
     // Get active tab
     const tabs = await getActiveTab();
@@ -50,20 +44,27 @@ const handleSummarizePage = async (sendResponse: (response: any) => void, style:
       return;
     }
 
+    if ( content ) {
+        const summary = await summarizeText(content, style, language);
+        sendResponse({ title: title, content: content, summary });
 
-    // Send a message to the content script to fetch page content
-    const response = await sendMessageToTab(tabs[0].id, { action: "fetchPageContent" });
-    
-    console.log("response::", response);
-    if (response?.content) {
-      // Summarize the content
-        console.log("Goin to summarize ::", response?.content.substring(0,200));
-        const summary = await summarizeText(response.content, style, language);
+    }else {
 
-        sendResponse({ title: response.title, content: response.content, summary });
-    } else {
-        sendResponse({ error: "No content extracted from the page." });
+        // Send a message to the content script to fetch page content
+        const response = await sendMessageToTab(tabs[0].id, { action: "fetchPageContent" });
+        
+        console.log("response::", response);
+        if (response?.content) {
+          // Summarize the content
+            console.log("Goin to summarize ::", response?.content.substring(0,200));
+            const summary = await summarizeText(response.content, style, language);
+
+            sendResponse({ title: response.title, content: response.content, summary });
+        } else {
+            sendResponse({ error: "No content extracted from the page." });
+        }
     }
+
   } catch (error) {
     console.error("Error in summarizing page:", error);
     sendResponse({ error: "An error occurred while summarizing the page." });

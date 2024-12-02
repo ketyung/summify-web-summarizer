@@ -22,6 +22,7 @@ const Popup = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
 
+ 
   
 
   const fetchContent = useCallback(async (byPassAutoCheck: boolean = false) => {
@@ -36,25 +37,28 @@ const Popup = () => {
 
     try {
      
-        chrome.runtime.sendMessage(
-          { type: 'sumPage', style: summStyle, language },
-          (sumResponse) => {
-            if (chrome.runtime.lastError) {
-              setError(chrome.runtime.lastError.message);
-              setIsError(true);
-            } else {
-              if (sumResponse?.content) {
-                setPageContent(sumResponse.content);
-                setSummary(sumResponse.summary || 'No summary available');
-                setTabIndex(0);
-              } else {
-                setError('No response or content received.');
-                setIsError(true);
-              }
-            }
-            setProcessing(false);
+      chrome.runtime.sendMessage(
+      { type: 'sumPage', style: summStyle, language  },
+      (sumResponse) => {
+        if (chrome.runtime.lastError) {
+          setError(chrome.runtime.lastError.message);
+          setIsError(true);
+        } else {
+          if (sumResponse?.content) {
+            setPageContent(sumResponse.content);
+            setSummary(sumResponse.summary || 'No summary available');
+            setTabIndex(0);
+          } else {
+            setError('No response or no content received.');
+            setIsError(true);
           }
-        );
+        }
+        setProcessing(false);
+      }
+    );
+      
+
+        
       
     } catch (err) {
       setError('An error occurred while fetching the content.');
@@ -185,6 +189,9 @@ const Popup = () => {
     </div>
   );
 };
+
+export default Popup;
+
 
 // Use createRoot to render the component in React 18 and later
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);

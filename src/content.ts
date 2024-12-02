@@ -46,8 +46,10 @@ if (window.location.pathname !== '/popup.html') {
     button.appendChild(buttonText);
 
     // Handle click event to open the popup
-    button.addEventListener('click', () => {
-      chrome.runtime.sendMessage({ action: 'openPopupWithTab' });
+    button.addEventListener('click', async () => {
+      
+        chrome.runtime.sendMessage({ action: 'openPopupWithTab'});
+
     });
 
     // Add the button to the DOM
@@ -57,28 +59,30 @@ if (window.location.pathname !== '/popup.html') {
 
 
 
+const getArticleFromDoc = () =>{
+
+  const docClone = document.cloneNode(true) as Document;
+
+  // Pass the cloned document to Readability
+  const reader = new Readability(docClone);
+  const article = reader.parse();
+
+  return article;
+
+}
+
 chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
   if (request.action === "fetchPageContent") {
     try {
       // Check if the opener exists (i.e., if the current window was opened by another window)
-      const openerDoc = window.opener ? window.opener.document : document;
-      
-      if (openerDoc) {
-        // Clone the opener's document to avoid altering the live DOM
-        const docClone = openerDoc.cloneNode(true) as Document;
-
-        // Pass the cloned document to Readability
-        const reader = new Readability(docClone);
-        const article = reader.parse();
+     
+         const article =  getArticleFromDoc();
 
         if (article) {
           sendResponse({ title: article.title, content: article.content.trim() });
         } else {
           sendResponse({ error: "Unable to parse the content from the parent window." });
         }
-      } else {
-        sendResponse({ error: "No opener found or the opener has no accessible content." });
-      }
     } catch (error: any) {
       console.error("Error extracting content with Readability:", error);
       sendResponse({ error: error.message });
