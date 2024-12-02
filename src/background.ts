@@ -2,12 +2,9 @@
 console.log("Background script running!");
 
 
-let hasBuiltInSummarizer = false;
-
 if ('ai' in self && 'summarizer' in (self.ai as any)) {
     // The Summarizer API is supported.
     console.log("The summarizer API is supported");
-    hasBuiltInSummarizer = true; 
 }
 
 // Listen for messages from the popup
@@ -39,11 +36,11 @@ const handleSummarizePage = async (sendResponse: (response: any) => void, style:
     
     if (response?.content) {
       // Summarize the content
-      const summary = await summarizeText(response.content, style, language);
+        const summary = await summarizeText(response.content, style, language);
 
-      sendResponse({ title: response.title, content: response.content, summary });
+        sendResponse({ title: response.title, content: response.content, summary });
     } else {
-      sendResponse({ error: "No content extracted from the page." });
+        sendResponse({ error: "No content extracted from the page." });
     }
   } catch (error) {
     console.error("Error in summarizing page:", error);
@@ -75,60 +72,6 @@ const sendMessageToTab = (tabId: number, message: any): Promise<any> => {
 
 const summarizeText = async (text: string, style : string, language? : string ): Promise<string> => {
 
-    if ( hasBuiltInSummarizer ) {
-
-        return await summarizeTextByChromeSummarizer(text, style, language);
-    }else {
-
-        return await summarizeTextByApi(text, style, language);
-    }
-}
-
-// Example function to send the content to your API for summarization
-const summarizeTextByApi = async (text: string, style : string, language? : string ): Promise<string> => {
-  try {
-
-    const postData : any = { content : text, summStyle: style, language: language  };
-
-    //console.log("post.data::", postData);
-
-    const response = await fetch("https://tools.techchee.com/api/gai/summWeb", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        'Authorization': `Bearer Temp_Chrome_Ext_Key_`, 
-      },
-      body: JSON.stringify({data : postData}),
-    });
-    const data = await response.json();
-
-    //console.log("at bg::data.is:",data);
-    
-    if ( data.status === 1)
-        return data.text;
-    else {
-
-        if (data.error){
-            return data.error;
-        }
-
-        if ( data.message ){
-            return data.message;
-        }
-        return 'Possibly error';
-    }
-    
-  } catch (error) {
-    console.error("Failed to summarize text:", error);
-    return "Error generating summary.";
-  }
-};
-
-
-// Example function to send the content to your API for summarization
-const summarizeTextByChromeSummarizer = async (text: string, style : string, _language? : string ): Promise<string> => {
-
-
   const ai : any = 'ai' in self && 'summarizer' in (self.ai as any) ? (self.ai as any) : undefined ;
 
 
@@ -148,6 +91,8 @@ const summarizeTextByChromeSummarizer = async (text: string, style : string, _la
       
       const available = (await ai.summarizer.capabilities()).available;
       let summarizer;
+
+      console.log("summarizer available?", available);
       if (available === 'no') {
           // The Summarizer API isn't usable.
           //console.log("summarizer is:",ai.summarizer );
@@ -165,16 +110,13 @@ const summarizeTextByChromeSummarizer = async (text: string, style : string, _la
           await summarizer.ready;
       }
 
-
-      //console.log("Going to summarize using built-in chrome summarizer with options:", options);
-
     
       const summary = await summarizer.summarize(text , {
         context: text ,
       });
     
-      if (summary && _language){
-          return await translateSummary(summary, _language);
+      if (summary && language){
+          return await translateSummary(summary, language);
       }
 
       return summary;
@@ -183,8 +125,8 @@ const summarizeTextByChromeSummarizer = async (text: string, style : string, _la
       return `Error: ${e.message}`;
   }
 
-
 }
+
 
 
 const translateSummary = async (summary : string, toLanguage : string, fromLanguage : string = 'en' ) =>{

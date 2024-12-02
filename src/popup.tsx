@@ -4,8 +4,7 @@ import { BeatLoader } from 'react-spinners';
 import { TabbedView , Tab, Checkbox, Button } from 'pix0-core-ui';
 import CopyButton from './copyButton';
 import FieldLabel from './components/FieldLabel';
-import StyleSel, { hasBuiltInSummarizer } from './components/StyleSel';
-import { SummarizationStyle } from './components/webSumStyle';
+import StyleSel from './components/StyleSel';
 import LanSel from './components/LanSel';
 import { GoAlert } from 'react-icons/go';
 import { ChromeSummType, getChromeSummTypeValue } from './components/chromeSumStyle';
@@ -25,7 +24,7 @@ const Popup = () => {
 
   const [auto, setAuto] = useState(false);
 
-  const [summStyle, setSummStyle] = useState<string>( hasBuiltInSummarizer ?  getChromeSummTypeValue(ChromeSummType.KeyPoints) : SummarizationStyle.BULLET_POINT);
+  const [summStyle, setSummStyle] = useState<string>( getChromeSummTypeValue(ChromeSummType.KeyPoints) );
 
   const [language, setLanguage] = useState("en");
 
