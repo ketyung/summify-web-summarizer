@@ -15,17 +15,28 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     handleSummarizePage(sendResponse, message.style, message.language);
     return true; // Keep the message channel open for async responses
   }else 
-  if (message.action === 'openPopup') {
-      chrome.windows.create({
-        url: 'popup.html',
-        type: 'popup',
-        width: 800,
-        height: 600,
-        left: 400, //Math.round(window.screen.width / 2 - 400), // Center the popup
-        top: 100,
-      });
-
-      return true; 
+  if (message.action === 'openPopupWithTab') {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]?.id) {
+        // Open the popup window
+        chrome.windows.create({
+          url: 'popup.html',
+          type: 'popup',
+          width: 800,
+          height: 600,
+          left: 100,
+          top: 100
+        }, (_w: any) => {
+          // Send active tab's ID to the popup
+          chrome.runtime.sendMessage({
+            action: 'popupOpened',
+            tabId: tabs[0].id // Send the active tab's ID
+          });
+        });
+      }
+    });
+    return true;
+    
   }
 });
 
@@ -46,6 +57,7 @@ const handleSummarizePage = async (sendResponse: (response: any) => void, style:
     
     if (response?.content) {
       // Summarize the content
+        console.log("Goin to summarize ::", response?.content.substring(0,200));
         const summary = await summarizeText(response.content, style, language);
 
         sendResponse({ title: response.title, content: response.content, summary });

@@ -47,7 +47,7 @@ if (window.location.pathname !== '/popup.html') {
 
     // Handle click event to open the popup
     button.addEventListener('click', () => {
-      chrome.runtime.sendMessage({ action: 'openPopup' });
+      chrome.runtime.sendMessage({ action: 'openPopupWithTab' });
     });
 
     // Add the button to the DOM
