@@ -54,7 +54,7 @@ const handleSummarizePage = async (sendResponse: (response: any) => void, style:
     // Send a message to the content script to fetch page content
     const response = await sendMessageToTab(tabs[0].id, { action: "fetchPageContent" });
     
-    
+    console.log("response::", response);
     if (response?.content) {
       // Summarize the content
         console.log("Goin to summarize ::", response?.content.substring(0,200));
