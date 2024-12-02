@@ -21,6 +21,7 @@ export const languageSymbols = [
 
 export const languageSymbols = [
     { code: 'bn', symbol: '🇧🇩', language: 'Bengali' },
+    { code: 'en', symbol: '🇬🇧', language: 'English' },
     { code: 'hi', symbol: '🇮🇳', language: 'Hindi' },
     { code: 'ja', symbol: '🇯🇵', language: 'Japanese' },
     { code: 'zh', symbol: '🇨🇳', language: 'Mandarin Chinese (Simplified)' },

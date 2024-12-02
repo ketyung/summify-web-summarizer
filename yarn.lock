@@ -1737,10 +1737,10 @@ pirates@^4.0.1:
   resolved "https://registry.yarnpkg.com/pirates/-/pirates-4.0.6.tgz#3018ae32ecfcff6c29ba2267cbf21166ac1f36b9"
   integrity sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==
 
-pix0-core-ui@^5.0.6:
-  version "5.0.6"
-  resolved "https://registry.yarnpkg.com/pix0-core-ui/-/pix0-core-ui-5.0.6.tgz#12bf852be986e401a10ea03d073498a1d8d7cadf"
-  integrity sha512-Ws8WRPpYe8/CAyp9Qnp82Wmde7s8vrPGrQAhLlcTHI0AbcJTsp1Nr/nrM5hsYNgeDEWWM7sft3GitVs5gemYVA==
+pix0-core-ui@^5.0.9:
+  version "5.0.9"
+  resolved "https://registry.yarnpkg.com/pix0-core-ui/-/pix0-core-ui-5.0.9.tgz#81d05d555cab7902120069d016d2bd9370ad3b91"
+  integrity sha512-w3E69YrqIzbxatVEJZFd0VvfrcLHAWlpGL9egOWECfQa3W7i7rJMaELWoOpZiatl9eORr+8iZSwBzEKT1Q/0Kw==
   dependencies:
     react-cookie "^7.1.4"
     react-intersection-observer "^9.13.0"
