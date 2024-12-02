@@ -40,16 +40,27 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   }
 });
 
-const handleSummarizePage = async (sendResponse: (response: any) => void, style: string, language ? : string, article? : string  ) => {
+const handleSummarizePage = async (sendResponse: (response: any) => void, style: string, language ? : string ) => {
   try {
     // Get active tab
+    const tabs = await getActiveTab();
+    if (!tabs[0]?.id) {
+
+      sendResponse({ error: "No active tab found." });
+      return;
+    }
+
+
+    // Send a message to the content script to fetch page content
+    const response = await sendMessageToTab(tabs[0].id, { action: "fetchPageContent" });
     
     
-    if (article) {
+    if (response?.content) {
       // Summarize the content
-        console.log("Goin to summarize ::", article?.substring(0,200));
-        const summary = await summarizeText(article, style, language);
-        sendResponse({ content : article, summary });
+        console.log("Goin to summarize ::", response?.content.substring(0,200));
+        const summary = await summarizeText(response.content, style, language);
+
+        sendResponse({ title: response.title, content: response.content, summary });
     } else {
         sendResponse({ error: "No content extracted from the page." });
     }
@@ -58,7 +69,7 @@ const handleSummarizePage = async (sendResponse: (response: any) => void, style:
     sendResponse({ error: "An error occurred while summarizing the page." });
   }
 };
-/*
+
 // Helper function to get the active tab
 const getActiveTab = (): Promise<chrome.tabs.Tab[]> => {
   return new Promise((resolve) => {
@@ -78,7 +89,7 @@ const sendMessageToTab = (tabId: number, message: any): Promise<any> => {
       }
     });
   });
-};*/
+};
 
 
 const summarizeText = async (text: string, style : string, language? : string ): Promise<string> => {

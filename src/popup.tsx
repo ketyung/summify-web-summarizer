@@ -22,16 +22,7 @@ const Popup = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
 
-  const [article, setArticle] = useState<any>(null); // Store the article content
-
-  useEffect(() => {
-    // Listen for the message from background script after popup is opened
-    chrome.runtime.onMessage.addListener((message, _sender, _sendResponse) => {
-      if (message.action === 'sendArticleToPopup') {
-        setArticle(message.article); // Update state with the article data
-      }
-    });
-  }, []);
+  
 
   const fetchContent = useCallback(async (byPassAutoCheck: boolean = false) => {
     if (!hasPermission || (!byPassAutoCheck && !auto)) {
@@ -44,11 +35,9 @@ const Popup = () => {
     setPageContent('');
 
     try {
-      
-      if (article) {
-        // Send the content to the background to get the summary
+     
         chrome.runtime.sendMessage(
-          { type: 'sumPage', style: summStyle, language, content: article },
+          { type: 'sumPage', style: summStyle, language },
           (sumResponse) => {
             if (chrome.runtime.lastError) {
               setError(chrome.runtime.lastError.message);
@@ -66,11 +55,7 @@ const Popup = () => {
             setProcessing(false);
           }
         );
-      } else {
-        setError('No content found on the page.');
-        setIsError(true);
-        setProcessing(false);
-      }
+      
     } catch (err) {
       setError('An error occurred while fetching the content.');
       setIsError(true);
