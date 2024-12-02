@@ -83,7 +83,7 @@ const summarizeText = async (text: string, style : string, language? : string ):
   try {
      
       const options = {
-        sharedContext: text ,
+        sharedContext: 'This is a scientific article',
         type: style,
         format: 'markdown',
         length: 'medium',

@@ -98,7 +98,7 @@ const Popup = () => {
   
   return (
     <div className={`min-h-96 p-4 bg-white rounded-lg shadow-md w-full${isError ? ' text-red-400' : ' text-gray-800'}`}>
-      <h2 className='text-2xl my-2 flex'><span className='mr-2'>Summify v1.4.5</span><FieldLabel className="inline flex ml-2 mt-1.5 mr-4" title="Auto Summarization">
+      <h2 className='text-2xl my-2 flex'><span className='mr-2'>Summify v{chrome.runtime.getManifest().version}</span><FieldLabel className="inline flex ml-2 mt-1.5 mr-4" title="Auto Summarization">
           <Checkbox lightTickColor='#ff2' checked={auto} setChecked={(c)=>{
 
                setAuto(c);
