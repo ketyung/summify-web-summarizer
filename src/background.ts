@@ -12,11 +12,21 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   
   if (message.type === "sumPage") {
   
-    
     handleSummarizePage(sendResponse, message.style, message.language);
     return true; // Keep the message channel open for async responses
-  }
+  }else 
+  if (message.action === 'openPopup') {
+      chrome.windows.create({
+        url: 'popup.html',
+        type: 'popup',
+        width: 800,
+        height: 600,
+        left: 400, //Math.round(window.screen.width / 2 - 400), // Center the popup
+        top: 100,
+      });
 
+      return true; 
+  }
 });
 
 const handleSummarizePage = async (sendResponse: (response: any) => void, style: string, language ? : string ) => {
