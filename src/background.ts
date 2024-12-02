@@ -173,11 +173,45 @@ const summarizeTextByChromeSummarizer = async (text: string, style : string, _la
         context: text ,
       });
     
+      if (summary && _language){
+          return await translateSummary(summary, _language);
+      }
+
       return summary;
   }catch(e : any ){
 
       return `Error: ${e.message}`;
   }
 
+
+}
+
+
+const translateSummary = async (summary : string, toLanguage : string, fromLanguage : string = 'en' ) =>{
+
+  if ('translation' in self && 'createTranslator' in (self.translation as any))  {
+      // The Translator API is supported.
+
+      const translation = (self.translation as any);
+
+      const canTranslate = await translation.canTranslate({
+        sourceLanguage: fromLanguage,
+        targetLanguage: toLanguage,
+      });
+
+      if (!canTranslate) {
+          return summary;
+      }
+
+      const translator = await translation.createTranslator({
+        sourceLanguage: fromLanguage,
+        targetLanguage: toLanguage,
+      });
+
+
+      const translatedText = await translator.translate(summary);
+
+      return translatedText;
+  }
 
 }

@@ -1,4 +1,4 @@
-
+/*
 export const languageSymbols = [
     { code: 'ar', symbol: '🇸🇦', language: 'Arabic' },
     { code: 'bm', symbol: '🇲🇾', language: 'Bahasa Malaysia' },
@@ -17,4 +17,18 @@ export const languageSymbols = [
     { code: 'zh', symbol: '🇨🇳', language: 'Simplified Chinese' },
     { code: 'zh-tw', symbol: '🇹🇼', language: 'Traditional Chinese' }
 ];
+*/
+
+export const languageSymbols = [
+    { code: 'bn', symbol: '🇧🇩', language: 'Bengali' },
+    { code: 'hi', symbol: '🇮🇳', language: 'Hindi' },
+    { code: 'ja', symbol: '🇯🇵', language: 'Japanese' },
+    { code: 'zh', symbol: '🇨🇳', language: 'Mandarin Chinese (Simplified)' },
+    { code: 'pt', symbol: '🇵🇹', language: 'Portuguese' },
+    { code: 'ru', symbol: '🇷🇺', language: 'Russian' },
+    { code: 'es', symbol: '🇪🇸', language: 'Spanish' },
+    { code: 'tr', symbol: '🇹🇷', language: 'Turkish' },
+    { code: 'zh-Hant', symbol: '🇹🇼', language: 'Taiwanese Mandarin (Traditional)' },
+    { code: 'vi', symbol: '🇻🇳', language: 'Vietnamese' },
+  ];
   
