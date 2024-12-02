@@ -53,7 +53,11 @@ if (window.location.pathname !== '/popup.html') {
     // Add the button to the DOM
     document.body.appendChild(button);
 
-}chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+}
+
+
+
+chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
   if (request.action === "fetchPageContent") {
     try {
       // Check if the opener exists (i.e., if the current window was opened by another window)
