@@ -48,8 +48,14 @@ if (window.location.pathname !== '/popup.html') {
     // Handle click event to open the popup
     button.addEventListener('click', async () => {
       
-        chrome.runtime.sendMessage({ action: 'openPopupWithTab'});
+        const article = getArticleFromDoc();
 
+        if ( article ) {
+
+            chrome.runtime.sendMessage({ action: 'openPopupWithTab',  article : article});
+
+        }
+       
     });
 
     // Add the button to the DOM

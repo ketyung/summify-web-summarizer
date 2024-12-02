@@ -20,6 +20,12 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       if (tabs[0]?.id) {
         // Open the popup window
 
+        if ( message.article ){
+
+            await chrome.storage.local.set({ 'content': message.article.content});
+            await chrome.storage.local.set({ 'title': message.article.title});
+        }
+
         chrome.windows.create({
           url: 'popup.html',
           type: 'popup',
