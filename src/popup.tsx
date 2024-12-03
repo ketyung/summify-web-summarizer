@@ -40,6 +40,7 @@ const Popup = () => {
      
       const {content,title} = await chrome.storage.local.get(['content', 'title']);
 
+      // convert to plain text
       const textContent = document.createElement("div");
       textContent.innerHTML = content; // Set the HTML content
       const plainText = textContent.textContent || ""; // Get only the text
