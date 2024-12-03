@@ -173,12 +173,14 @@ const translateSummary = async (summary : string, toLanguage : string, fromLangu
 
       const translation = (self.translation as any);
 
+
       const canTranslate = await translation.canTranslate({
         sourceLanguage: fromLanguage,
         targetLanguage: toLanguage,
       });
 
       if (!canTranslate) {
+          console.log("Unable to translate from", fromLanguage, "to",toLanguage);
           return summary;
       }
 
@@ -192,6 +194,10 @@ const translateSummary = async (summary : string, toLanguage : string, fromLangu
 
       return translatedText;
   }
+
+  console.log("No translator available for translating", fromLanguage, "to",toLanguage);
+
+  return summary;
 
 }
 
