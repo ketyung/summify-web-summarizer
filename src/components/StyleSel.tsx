@@ -1,5 +1,5 @@
 import { Select } from "pix0-core-ui";
-import { ChromeSummType, AllSummStyles as GAllSumStyles, getChromeSummTypeValue, stringToChromeSummType } from "./chromeSumStyle";
+import { ChromeSummType, AllSummStyles as GAllSumStyles, getChromeSummTypeValue } from "./chromeSumStyle";
 
 export const hasBuiltInSummarizer = ('ai' in self && 'summarizer' in (self.ai as any));
  
@@ -18,9 +18,13 @@ export default function StyleSel({setSelectedStyle, selectedStyle} :props) {
         if (  e === ChromeSummType.None) {
           return {value : e, label:"Choose A Style"};
         }
-        return {value : e, label: e}
+
+        const o = {value : getChromeSummTypeValue(e), label: e};
+        //console.log("oo::", o);
+        return o;
+
     })} onChange={(e)=>{
-        setSelectedStyle( getChromeSummTypeValue(stringToChromeSummType(e.target.value)) );
-    }} value={stringToChromeSummType(selectedStyle)}/>
+        setSelectedStyle(e.target.value );
+    }} value={selectedStyle}/>
     
 }

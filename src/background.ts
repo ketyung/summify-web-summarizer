@@ -12,7 +12,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   
   if (message.type === "sumPage") {
   
-    handleSummarizePage(sendResponse, message.style, message.language);
+    handleSummarizePage(sendResponse, message.style, message.language, message.content, message.title);
     return true; // Keep the message channel open for async responses
   }else 
   if (message.action === 'openPopupWithTab') {
@@ -26,21 +26,14 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
           type: 'popup',
           width: 800,
           height: 600,
-          left: 100, // Position of the popup
+          left: 400, // Position of the popup
           top: 100,
         }, async (_w : any) => {
-            // Send the tab ID to the popup or background
-            /*chrome.runtime.sendMessage({
-              action: 'openPopupWithTab',
-              tabId: tabs[0].id
-            });*/
-            console.log("windows.created::", _w);
-
+           
             if ( message.article ){
                 await chrome.storage.local.set({ 'content': message.article.content});
                 await chrome.storage.local.set({ 'title': message.article.title});
             }
-  
 
         });
       };
@@ -62,8 +55,9 @@ const handleSummarizePage = async (sendResponse: (response: any) => void, style:
       return;
     }
 
+    
     if ( content ) {
-        const summary = await summarizeText(content, style, language);
+        const summary = await summarizeTextByApi(content, style, language);
         sendResponse({ title: title, content: content, summary });
 
     }else {
@@ -71,11 +65,9 @@ const handleSummarizePage = async (sendResponse: (response: any) => void, style:
         // Send a message to the content script to fetch page content
         const response = await sendMessageToTab(tabs[0].id, { action: "fetchPageContent" });
         
-        console.log("response::", response);
         if (response?.content) {
           // Summarize the content
-            console.log("Goin to summarize ::", response?.content.substring(0,200));
-            const summary = await summarizeText(response.content, style, language);
+            const summary = await summarizeTextByApi(response.content, style, language);
 
             sendResponse({ title: response.title, content: response.content, summary });
         } else {
@@ -110,7 +102,7 @@ const sendMessageToTab = (tabId: number, message: any): Promise<any> => {
   });
 };
 
-
+/*
 const summarizeText = async (text: string, style : string, language? : string ): Promise<string> => {
 
   const ai : any = 'ai' in self && 'summarizer' in (self.ai as any) ? (self.ai as any) : undefined ;
@@ -198,3 +190,45 @@ const translateSummary = async (summary : string, toLanguage : string, fromLangu
   }
 
 }
+*/
+
+const summarizeTextByApi = async (text: string, style : string, language? : string ): Promise<string> => {
+  try {
+
+    //console.log("style::", style, "lan::", language);
+
+    const postData : any = { content : text, summStyle: style, language: language  };
+
+    //console.log("post.data::", postData);
+
+    const response = await fetch("https://tools.techchee.com/api/gai/summWeb", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer Temp_Chrome_Ext_Key_`, 
+      },
+      body: JSON.stringify({data : postData}),
+    });
+    const data = await response.json();
+
+    //console.log("at bg::data.is:",data);
+    
+    if ( data.status === 1)
+        return data.text;
+    else {
+
+        if (data.error){
+            return data.error;
+        }
+
+        if ( data.message ){
+            return data.message;
+        }
+        return 'Possibly error';
+    }
+    
+  } catch (error) {
+    console.error("Failed to summarize text:", error);
+    return "Error generating summary.";
+  }
+};

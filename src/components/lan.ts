@@ -24,12 +24,12 @@ export const languageSymbols = [
     { code: 'en', symbol: '🇬🇧', language: 'English' },
     { code: 'hi', symbol: '🇮🇳', language: 'Hindi' },
     { code: 'ja', symbol: '🇯🇵', language: 'Japanese' },
-    { code: 'zh', symbol: '🇨🇳', language: 'Mandarin Chinese (Simplified)' },
     { code: 'pt', symbol: '🇵🇹', language: 'Portuguese' },
     { code: 'ru', symbol: '🇷🇺', language: 'Russian' },
     { code: 'es', symbol: '🇪🇸', language: 'Spanish' },
+    { code: 'zh', symbol: '🇨🇳', language: 'Simplified Chinese' },
+    { code: /*'zh-Hant'*/ 'zh-tw', symbol: '🇹🇼', language: 'Traditional Chinese' },
     { code: 'tr', symbol: '🇹🇷', language: 'Turkish' },
-    { code: 'zh-Hant', symbol: '🇹🇼', language: 'Taiwanese Mandarin (Traditional)' },
     { code: 'vi', symbol: '🇻🇳', language: 'Vietnamese' },
   ];
   
