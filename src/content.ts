@@ -1,6 +1,5 @@
 import { Readability } from "@mozilla/readability";
 
-
 const injectButton = () =>{
 // Check if the page is not the popup page
       if (window.location.pathname !== '/popup.html') {

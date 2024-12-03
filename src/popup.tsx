@@ -9,6 +9,7 @@ import LanSel from './components/LanSel';
 import { GoAlert } from 'react-icons/go';
 import { ChromeSummType, getChromeSummTypeValue } from './components/chromeSumStyle';
 
+
 const Popup = () => {
   const [pageContent, setPageContent] = useState<string>('');
   const [summary, setSummary] = useState<string>('');
@@ -39,11 +40,14 @@ const Popup = () => {
      
       const {content,title} = await chrome.storage.local.get(['content', 'title']);
 
+      const textContent = document.createElement("div");
+      textContent.innerHTML = content; // Set the HTML content
+      const plainText = textContent.textContent || ""; // Get only the text
 
       //console.log("content.is::", content);
 
       chrome.runtime.sendMessage(
-      { type: 'sumPage', style: summStyle, language, content, title  },
+      { type: 'sumPage', style: summStyle, language, content : plainText, title  },
       (sumResponse) => {
         if (chrome.runtime.lastError) {
           setError(chrome.runtime.lastError.message);
