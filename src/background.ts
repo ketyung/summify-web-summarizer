@@ -57,7 +57,7 @@ const handleSummarizePage = async (sendResponse: (response: any) => void, style:
 
     
     if ( content ) {
-        const summary = await summarizeTextByApi(content, style, language);
+        const summary = await summarizeText(content, style, language);
         sendResponse({ title: title, content: content, summary });
 
     }else {
@@ -67,7 +67,7 @@ const handleSummarizePage = async (sendResponse: (response: any) => void, style:
         
         if (response?.content) {
           // Summarize the content
-            const summary = await summarizeTextByApi(response.content, style, language);
+            const summary = await summarizeText(response.content, style, language);
 
             sendResponse({ title: response.title, content: response.content, summary });
         } else {
@@ -102,7 +102,7 @@ const sendMessageToTab = (tabId: number, message: any): Promise<any> => {
   });
 };
 
-/*
+
 const summarizeText = async (text: string, style : string, language? : string ): Promise<string> => {
 
   const ai : any = 'ai' in self && 'summarizer' in (self.ai as any) ? (self.ai as any) : undefined ;
@@ -149,6 +149,10 @@ const summarizeText = async (text: string, style : string, language? : string ):
       });
     
       if (summary && language){
+
+          if ( language === 'en') {
+              return summary;
+          }
           return await translateSummary(summary, language);
       }
 
@@ -190,8 +194,8 @@ const translateSummary = async (summary : string, toLanguage : string, fromLangu
   }
 
 }
-*/
 
+/*
 const summarizeTextByApi = async (text: string, style : string, language? : string ): Promise<string> => {
   try {
 
@@ -231,4 +235,4 @@ const summarizeTextByApi = async (text: string, style : string, language? : stri
     console.error("Failed to summarize text:", error);
     return "Error generating summary.";
   }
-};
+};*/
