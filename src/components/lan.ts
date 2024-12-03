@@ -28,7 +28,7 @@ export const languageSymbols = [
     { code: 'ru', symbol: '🇷🇺', language: 'Russian' },
     { code: 'es', symbol: '🇪🇸', language: 'Spanish' },
     { code: 'zh', symbol: '🇨🇳', language: 'Simplified Chinese' },
-    { code: /*'zh-Hant'*/ 'zh-tw', symbol: '🇹🇼', language: 'Traditional Chinese' },
+    { code: /*'zh-Hant'*/ 'zh-Hant', symbol: '🇹🇼', language: 'Traditional Chinese' },
     { code: 'tr', symbol: '🇹🇷', language: 'Turkish' },
     { code: 'vi', symbol: '🇻🇳', language: 'Vietnamese' },
   ];
