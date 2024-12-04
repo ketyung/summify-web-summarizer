@@ -171,7 +171,7 @@ const translateSummary = async (summary : string, toLanguage : string, fromLangu
   if ('translation' in self && 'createTranslator' in (self.translation as any))  {
       // The Translator API is supported.
 
-      const translation = (self.translation as any);
+      const translation = (self.translation as any);//(self.translation as any);
 
 
       const translatorStatus = await translation.canTranslate({
@@ -184,6 +184,8 @@ const translateSummary = async (summary : string, toLanguage : string, fromLangu
           return summary;
       }
 
+      console.log("Translator status is", translatorStatus);
+
       const translator = await translation.createTranslator({
         sourceLanguage: fromLanguage,
         targetLanguage: toLanguage,
@@ -194,11 +196,10 @@ const translateSummary = async (summary : string, toLanguage : string, fromLangu
 
       return translatedText;
   }
-
   console.log("No translator available for translating", fromLanguage, "to",toLanguage);
 
   return summary;
-
+  
 }
 
 /*
