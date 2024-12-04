@@ -51,15 +51,8 @@ Feel free to fork the repository, submit issues, or suggest new features. Contri
 
 ---
 
-## License  
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.  
-
----
-
-## Built For Devpost Hackathon 
+## Built For Devpost Hackathon : Google Chrome Built-in AI Challenge
 https://devpost.com/software/summify-a-web-page-summarizer
-Here's a corrected version:
 
 ---
 
@@ -67,4 +60,12 @@ Here's a corrected version:
 If you'd like to explore an online hosted version of the [AI Web Page Summarizer](https://tools.techchee.com/ai-tools/web-summarizer), you can check it out at [https://tools.techchee.com/ai-tools/web-summarizer](https://tools.techchee.com/ai-tools/web-summarizer).
 
 Happy Summarizing!  
+
+## License  
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.  
+
+---
 ```  
+
+
