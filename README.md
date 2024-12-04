@@ -64,5 +64,8 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ---
 
+## Built For Devpost Hackathon 
+https://devpost.com/software/summify-a-web-page-summarizer
+
 Happy Summarizing!  
 ```  
