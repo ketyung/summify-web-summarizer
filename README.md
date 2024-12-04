@@ -32,7 +32,7 @@ yarn build:css
 1. Open **Chrome** or **Chrome Canary**.  
 2. Go to `chrome://extensions/`.  
 3. Enable **Developer mode** using the toggle at the top right.  
-4. Click **Load unpacked** and select the folder where the repository is cloned and built (`summify-web-summarizer/build`).  
+4. Click **Load unpacked** and select the folder where the repository is cloned and built (`summify-web-summarizer/dist`).  
 5. The extension should now appear in your list of installed extensions.  
 
 ---
