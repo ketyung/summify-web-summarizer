@@ -59,6 +59,12 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Built For Devpost Hackathon 
 https://devpost.com/software/summify-a-web-page-summarizer
+Here's a corrected version:
+
+---
+
+## Hosted Web Page Summarizer  
+If you'd like to explore an online hosted version of the [AI Web Page Summarizer](https://tools.techchee.com/ai-tools/web-summarizer), you can check it out at [https://tools.techchee.com/ai-tools/web-summarizer](https://tools.techchee.com/ai-tools/web-summarizer).
 
 Happy Summarizing!  
 ```  
