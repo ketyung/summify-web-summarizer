@@ -16,9 +16,15 @@ git clone https://github.com/ketyung/summify-web-summarizer
 cd summify-web-summarizer  
 ```  
 
-### Build Instructions  
+### Build Instructions 
 
-Run the following commands to build the project:  
+First of all run yarn to install all the required packages:
+
+```bash 
+yarn 
+```
+
+Then, run the following commands to build the project:  
 
 ```bash  
 yarn build  
