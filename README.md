@@ -1,4 +1,3 @@
-```markdown
 # Summify - Web Page Summarizer  
 
 Summify is a Chrome extension that lets you summarize any web page you visit. It uses Chrome's built-in summarization and translation APIs to provide summaries in your chosen format and language.  
@@ -8,8 +7,6 @@ Summify is a Chrome extension that lets you summarize any web page you visit. It
 - Multi-language support using Chrome's translation API.  
 - Simple and intuitive interface for seamless usage.  
 
----
-
 ## Getting Started  
 
 ### Git Clone This Repo  
@@ -18,8 +15,6 @@ Summify is a Chrome extension that lets you summarize any web page you visit. It
 git clone https://github.com/ketyung/summify-web-summarizer  
 cd summify-web-summarizer  
 ```  
-
----
 
 ### Build Instructions  
 
