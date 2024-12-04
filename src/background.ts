@@ -168,25 +168,25 @@ const summarizeText = async (text: string, style : string, language? : string ):
 
 const translateSummary = async (summary : string, toLanguage : string, fromLanguage : string = 'en' ) =>{
 
-  if ('translation' in self && 'createTranslator' in (self.translation as any))  {
+  if ('translation' in self /*&& 'createTranslator' in (self.translation as any)*/)  {
       // The Translator API is supported.
 
-      const translation = (self.translation as any);//(self.translation as any);
 
-
-      const translatorStatus = await translation.canTranslate({
+      const translatorStatus = await (self.translation as any).canTranslate({
         sourceLanguage: fromLanguage,
         targetLanguage: toLanguage,
       });
 
+
+   
       if (translatorStatus === "no") {
           console.log("Unable to translate from", fromLanguage, "to",toLanguage, "translator is", translatorStatus);
           return summary;
       }
-
       console.log("Translator status is", translatorStatus);
 
-      const translator = await translation.createTranslator({
+     
+      const translator = await (self.translation as any).createTranslator({
         sourceLanguage: fromLanguage,
         targetLanguage: toLanguage,
       });
