@@ -1,5 +1,3 @@
-Here's a comprehensive README file for your GitHub repository:  
-
 ```markdown
 # Summify - Web Page Summarizer  
 
